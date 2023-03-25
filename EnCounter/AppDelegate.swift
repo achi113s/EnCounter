@@ -12,8 +12,8 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let myPokemon: [PokemonFromCSV] = parseCSV()
-        addPokemonToCoreData(pokemons: myPokemon, context: persistentContainer.viewContext)
+        let pokemonList: [PokemonFromCSV] = parseCSV()
+        addPokemonToCoreData(pokemonList, context: persistentContainer.viewContext)
 //        var dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 //        print(dataFilePath)
         return true
@@ -78,47 +78,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //MARK: - Load Pokemon Data CSV File Into CoreData
     struct PokemonFromCSV {
-        var pokemonName: String
         var pokemonId: Int16
+        var pokemonName: String
     }
     
     func parseCSV() -> [PokemonFromCSV] {
-        var pokemonData = [PokemonFromCSV]()
+        var pokemonDataFile = [PokemonFromCSV]()
         
         guard let filepath = Bundle.main.path(forResource: "pokemonData", ofType: "csv") else {
             return []
         }
         
         // Convert the file into one long string.
-        var data: String = ""
+        var pokemonDataAsString: String = ""
         do {
-            data = try String(contentsOfFile: filepath)
+            pokemonDataAsString = try String(contentsOfFile: filepath)
         } catch {
             print("Could not parse Pokemon data file \(error).")
             return []
         }
         
-        var rows = data.components(separatedBy: "\n")
+        var rows = pokemonDataAsString.components(separatedBy: "\n")
         
+        // Remove the row with the column names.
         rows.removeFirst()
         
         for row in rows {
             let columns = row.components(separatedBy: ",")
             
-            if columns.count == 2 {
+            if columns.count >= 2 {
                 let id = Int16(columns[0]) ?? 0
                 let name = columns[1].trimmingCharacters(in: .whitespacesAndNewlines).capitalized
                 
-                let pokemon = PokemonFromCSV(pokemonName: name, pokemonId: id)
-                pokemonData.append(pokemon)
+                let pokemon = PokemonFromCSV(pokemonId: id, pokemonName: name)
+                pokemonDataFile.append(pokemon)
             }
         }
-        return pokemonData
+        return pokemonDataFile
     }
     
-    func addPokemonToCoreData(pokemons: [PokemonFromCSV], context: NSManagedObjectContext) {
+    func addPokemonToCoreData(_ pokemonList: [PokemonFromCSV], context: NSManagedObjectContext) {
         removeData(context: context)
-        for p in pokemons {
+        for p in pokemonList {
             let pokemon = Pokemon(context: context)
             pokemon.pokemonName = p.pokemonName
             pokemon.pokemonID = p.pokemonId
