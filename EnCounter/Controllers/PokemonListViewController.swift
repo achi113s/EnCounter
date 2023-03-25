@@ -60,7 +60,7 @@ class PokemonListViewController: UITableViewController, UISearchBarDelegate {
         }
     }
     
-    //MARK: - Data Manipulation Methods
+    //MARK: - CoreData Manipulation Methods
     
     func loadPokemon(with request: NSFetchRequest<Pokemon> = Pokemon.fetchRequest(), predicate: NSPredicate? = nil) {
         // If a predicate was passed in, we need to filter the fetched results.

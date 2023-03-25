@@ -19,6 +19,8 @@ class HuntsViewController: UITableViewController {
         loadHunts()
     }
 
+    //MARK: - TableView Data Source Methods
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return hunts.count
     }
@@ -35,6 +37,8 @@ class HuntsViewController: UITableViewController {
         return cell
     }
     
+    //MARK: - TableView Delegate Methods
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: K.SegueNames.goToHuntSummary, sender: self)
     }
@@ -48,6 +52,8 @@ class HuntsViewController: UITableViewController {
             }
         }
     }
+    
+    //MARK: - Data Manipulation Methods
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: K.SegueNames.goToPokemonList, sender: self)

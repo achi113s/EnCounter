@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class HuntSummaryViewController: UIViewController {
     
@@ -16,6 +17,7 @@ class HuntSummaryViewController: UIViewController {
     @IBOutlet weak var encounterCountStepper: UIStepper!
     
     var selectedHunt: Hunt?
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,33 @@ class HuntSummaryViewController: UIViewController {
             pokemonIDLabel.text = String(hunt.pokemonID)
             pokemonNameLabel.text = hunt.pokemonName
             pokemonEncounterCountLabel.text = String(hunt.encounterCount)
+            encounterCountStepper.value = Double(hunt.encounterCount)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if let huntsVC = navigationController?.viewControllers.first as? HuntsViewController {
+            huntsVC.tableView.reloadData()
+        }
+    }
+    
+    //MARK: - CoreData Manipulation Methods
+    
+    func saveContext(_ context: NSManagedObjectContext) {
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context, \(error)")
+        }
+    }
+    
+    @IBAction func stepperValueChanged(_ sender: UIStepper) {
+        if let hunt = selectedHunt {
+            let newStepperValue: Int32 = Int32(encounterCountStepper.value)
+            hunt.encounterCount = newStepperValue
+            pokemonEncounterCountLabel.text = String(newStepperValue)
+            
+            saveContext(context)
         }
     }
 }
