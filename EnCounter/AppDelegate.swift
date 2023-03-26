@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func parseCSV() -> [PokemonFromCSV] {
         var pokemonDataFile = [PokemonFromCSV]()
         
-        guard let filepath = Bundle.main.path(forResource: "pokemonData", ofType: "csv") else {
+        guard let filepath = Bundle.main.path(forResource: "pokemonNames", ofType: "csv") else {
             return []
         }
         

@@ -17,6 +17,7 @@ class PokemonSummaryViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var selectedPokemon: Pokemon?
+    var pokeAPIManager: PokeAPIManager = PokeAPIManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +29,11 @@ class PokemonSummaryViewController: UIViewController {
             spriteImageView.image = UIImage(named: String(pokemon.pokemonID))
             pokemonIDLabel.text = String(pokemon.pokemonID)
             pokemonNameLabel.text = pokemon.pokemonName
+            
+            pokeAPIManager.delegate = self
+            if let safeName = pokemon.pokemonName?.lowercased() {
+                pokeAPIManager.fetchPokemon(withName: safeName)
+            }
         }
     }
     
@@ -61,5 +67,17 @@ class PokemonSummaryViewController: UIViewController {
             
             navigationController?.popToRootViewController(animated: true)
         }
+    }
+}
+
+//MARK: - PokeAPIManagerDelegate
+
+extension PokemonSummaryViewController: PokeAPIManagerDelegate {
+    func didFetchPokemon(_ pokeAPIManager: PokeAPIManager, pokemon: PokeAPIPokemonModel) {
+        print(pokemon)
+    }
+    
+    func didFailWithError(error: Error) {
+        print(error)
     }
 }

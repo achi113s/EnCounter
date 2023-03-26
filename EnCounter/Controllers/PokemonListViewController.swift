@@ -12,7 +12,7 @@ class PokemonListViewController: UITableViewController, UISearchBarDelegate {
 
     var pokemonArray = [Pokemon]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
+    
     @IBOutlet weak var searchBar: UISearchBar!
     
     override func viewDidLoad() {
@@ -21,7 +21,6 @@ class PokemonListViewController: UITableViewController, UISearchBarDelegate {
         tableView.register(UINib(nibName: K.pokemonCellNibName, bundle: nil), forCellReuseIdentifier: K.pokemonCellIdentifier)
         tableView.tableHeaderView = searchBar
         searchBar.delegate = self
-        
         
         loadPokemon()
     }
@@ -96,4 +95,3 @@ class PokemonListViewController: UITableViewController, UISearchBarDelegate {
         tableView.reloadData()
     }
 }
-
