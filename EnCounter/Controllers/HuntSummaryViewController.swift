@@ -15,6 +15,7 @@ class HuntSummaryViewController: UIViewController {
     @IBOutlet weak var pokemonNameLabel: UILabel!
     @IBOutlet weak var pokemonEncounterCountLabel: UILabel!
     @IBOutlet weak var encounterCountStepper: UIStepper!
+    @IBOutlet weak var dateLabel: UILabel!
     
     var selectedHunt: Hunt?
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -31,6 +32,7 @@ class HuntSummaryViewController: UIViewController {
             pokemonNameLabel.text = hunt.pokemonName
             pokemonEncounterCountLabel.text = String(hunt.encounterCount)
             encounterCountStepper.value = Double(hunt.encounterCount)
+            dateLabel.text = hunt.startDate?.formatted() ?? "01/01/2099"
         }
     }
     

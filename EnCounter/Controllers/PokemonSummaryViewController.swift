@@ -52,6 +52,7 @@ class PokemonSummaryViewController: UIViewController {
             newHunt.pokemonID = pokemonToAdd.pokemonID
             newHunt.pokemonName = pokemonToAdd.pokemonName
             newHunt.huntID = UUID()
+            newHunt.startDate = Date()
             
             saveContext(context)
             
