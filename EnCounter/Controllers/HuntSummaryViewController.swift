@@ -26,7 +26,9 @@ class HuntSummaryViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
         if let hunt = selectedHunt {
+            title = hunt.pokemonName
             spriteImageView.image = UIImage(named: String(hunt.pokemonID))
             pokemonIDLabel.text = String(hunt.pokemonID)
             pokemonNameLabel.text = hunt.pokemonName

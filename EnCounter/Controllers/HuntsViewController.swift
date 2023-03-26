@@ -18,6 +18,11 @@ class HuntsViewController: UITableViewController {
         tableView.register(UINib(nibName: K.huntCellNibName, bundle: nil), forCellReuseIdentifier: K.huntCellIdentifier)
         loadHunts()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
 
     //MARK: - TableView Data Source Methods
     

@@ -11,8 +11,9 @@ import CoreData
 class PokemonSummaryViewController: UIViewController {
     
     @IBOutlet weak var spriteImageView: UIImageView!
-    @IBOutlet weak var pokemonIDLabel: UILabel!
     @IBOutlet weak var pokemonNameLabel: UILabel!
+    @IBOutlet weak var pokemonGenusLabel: UILabel!
+    @IBOutlet weak var pokemonDescLabel: UILabel!
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -25,10 +26,13 @@ class PokemonSummaryViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
         if let pokemon = selectedPokemon {
             spriteImageView.image = UIImage(named: String(pokemon.pokemonID))
-            pokemonIDLabel.text = String(pokemon.pokemonID)
-            pokemonNameLabel.text = pokemon.pokemonName
+            pokemonNameLabel.text = "\(pokemon.pokemonID). \(pokemon.pokemonName ?? "None")"
+            title = pokemon.pokemonName ?? "Pokemon"
+            pokemonGenusLabel.text = ""
+            pokemonDescLabel.text = ""
             
             pokeAPIManager.delegate = self
             if let safeName = pokemon.pokemonName?.lowercased() {
@@ -74,7 +78,10 @@ class PokemonSummaryViewController: UIViewController {
 
 extension PokemonSummaryViewController: PokeAPIManagerDelegate {
     func didFetchPokemon(_ pokeAPIManager: PokeAPIManager, pokemon: PokeAPIPokemonModel) {
-        print(pokemon)
+        DispatchQueue.main.async {
+            self.pokemonGenusLabel.text = pokemon.genus
+            self.pokemonDescLabel.text = pokemon.pokemonDescription
+        }
     }
     
     func didFailWithError(error: Error) {

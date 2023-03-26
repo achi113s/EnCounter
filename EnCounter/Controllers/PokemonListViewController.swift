@@ -25,6 +25,11 @@ class PokemonListViewController: UITableViewController, UISearchBarDelegate {
         loadPokemon()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
     //MARK: - Table View Data Source Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

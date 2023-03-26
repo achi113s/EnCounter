@@ -25,7 +25,6 @@ struct PokeAPIManager {
     
     func performRequest(with urlString: String) {
         if let url = URL(string: urlString) {
-            print(url)
             let session = URLSession(configuration: .default)
             
             let task = session.dataTask(with: url) { data, response, error in
