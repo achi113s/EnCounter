@@ -4,6 +4,7 @@
 //
 //  Created by Giorgio Latour on 3/25/23.
 //
+//  App Icon: Background by Olga Hmelevskaya on Freepik
 
 import UIKit
 import CoreData
