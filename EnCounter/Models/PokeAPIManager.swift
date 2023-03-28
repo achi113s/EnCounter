@@ -49,10 +49,15 @@ struct PokeAPIManager {
             let decodedData = try decoder.decode(PokeAPIData.self, from: pokeAPIData)
             let id = decodedData.pokedex_numbers[0].entry_number
             let name = decodedData.name
-            let desc = decodedData.flavor_text_entries[0].flavor_text.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "\u{0C}", with: " ")
             let genus = decodedData.genera[7].genus
-            
-            let pokemon = PokeAPIPokemonModel(pokemonID: id, pokemonName: name, pokemonDescription: desc, genus: genus)
+            var flavor: String?
+            for f in decodedData.flavor_text_entries {
+                if f.language.name == "en" {
+                    flavor = f.flavor_text.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "\u{0C}", with: " ")
+                    break
+                }
+            }
+            let pokemon = PokeAPIPokemonModel(pokemonID: id, pokemonName: name, pokemonDescription: flavor ?? "Error retrieving description.", genus: genus)
             return pokemon
         } catch {
             delegate?.didFailWithError(error: error)

@@ -58,10 +58,49 @@ class HuntsViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { action, sourceView, completionHandler in
+            let huntPredicate = NSPredicate(format: "\(K.CoreDataConst.huntUUIDField) == %@", self.hunts[indexPath.row].huntID! as CVarArg)
+            
+            let request = Hunt.fetchRequest()
+            request.predicate = huntPredicate
+            
+            var huntsToDelete = [Hunt]()
+            
+            do {
+                huntsToDelete = try self.context.fetch(request)
+                self.hunts.remove(at: indexPath.row)
+            } catch {
+                print("Error fetching data from context, \(error).")
+                completionHandler(false)
+            }
+            
+            for hunt in huntsToDelete {
+                self.context.delete(hunt)
+            }
+            
+            self.saveHunts()
+            DispatchQueue.main.async {
+                tableView.reloadData()
+            }
+            completionHandler(true)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
     //MARK: - Data Manipulation Methods
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: K.SegueNames.goToPokemonList, sender: self)
+    }
+    
+    func saveHunts() {
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context, \(error)")
+        }
+        tableView.reloadData()
     }
     
     func loadHunts(with request: NSFetchRequest<Hunt> = Hunt.fetchRequest()) {
