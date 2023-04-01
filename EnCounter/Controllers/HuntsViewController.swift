@@ -69,20 +69,17 @@ class HuntsViewController: UITableViewController {
             
             do {
                 huntsToDelete = try self.context.fetch(request)
+                
                 self.hunts.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                
+                self.context.delete(huntsToDelete[0])
+                self.saveHunts()
             } catch {
-                print("Error fetching data from context, \(error).")
+                print("Error deleting data, \(error).")
                 completionHandler(false)
             }
-            
-            for hunt in huntsToDelete {
-                self.context.delete(hunt)
-            }
-            
-            self.saveHunts()
-            DispatchQueue.main.async {
-                tableView.reloadData()
-            }
+
             completionHandler(true)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
