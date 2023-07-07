@@ -36,7 +36,9 @@ class PokemonSummaryViewController: UIViewController {
             
             pokeAPIManager.delegate = self
             if let safeName = pokemon.pokemonName?.lowercased() {
-                pokeAPIManager.fetchPokemon(withName: safeName)
+                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                    self?.pokeAPIManager.fetchPokemon(withName: safeName)
+                }
             }
         }
     }
